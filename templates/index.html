@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Image Encryptor</title>
-  </head>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  <body>
-    <h1>Image Encryptor</h1>
-    <a href="/encode">Encode Message</a><br />
-    <a href="/decode">Decode Message</a>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="text-center">
+    <h1 class="mb-3"> Image Encryptor</h1>
+    <p class="lead mb-4">Hide encrypted messages inside images using AES + Steganography.</p>
+
+    <a href="/encode" class="btn btn-primary btn-lg me-2">Encode Message</a>
+    <a href="/decode" class="btn btn-outline-dark btn-lg">Decode Message</a>
+</div>
+
+{% endblock %}

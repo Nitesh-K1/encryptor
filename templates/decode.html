@@ -1,12 +1,22 @@
-<!DOCTYPE html>
-<html>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  <body>
-    <h2>Decode Message</h2>
-    <form method="post" enctype="multipart/form-data">
-      Encoded Image: <input type="file" name="image" required /><br />
-      Password: <input type="password" name="password" required /><br />
-      <input type="submit" value="Decode" />
-    </form>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h3 class="mb-3 text-center">Decode Hidden Message</h3>
+
+            <form method="POST" enctype="multipart/form-data">
+                <label class="mb-1">Upload Encoded Image</label>
+                <input type="file" name="image" class="form-control mb-3" required>
+
+                <label class="mb-1">Password</label>
+                <input type="password" name="password" class="form-control mb-4" required>
+
+                <button class="btn btn-custom w-100">Decode</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
