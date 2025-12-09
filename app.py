@@ -5,6 +5,8 @@ from crypto_utils import generate_key_from_password, encrypt_message, decrypt_me
 import os
 from utils import text_to_bits
 from werkzeug.utils import secure_filename
+from base64 import b64encode, b64decode
+import base64
 
 app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
@@ -19,20 +21,39 @@ def encode():
     if request.method == "POST":
         file = request.files["image"]
         message = request.form["message"]
+        hidden_file = request.files.get("hidden_file")
         password = request.form["password"]
-        if file and message and password:
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(UPLOAD_FOLDER, filename)
-            file.save(filepath)
-            img = load_image(filepath)
-            key, salt = generate_key_from_password(password)
-            enc_msg = encrypt_message(message, key)
-            out_path = os.path.join(UPLOAD_FOLDER, "encoded_" + filename)
-            full_message = salt.hex() + ":" + enc_msg
-            message_bits = text_to_bits(full_message)
-            encode_image(img, message_bits, out_path)
 
-            return send_file(out_path, as_attachment=True)
+        if not file or not password:
+            return render_template("encode.html")
+
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(filepath)
+        img = load_image(filepath)
+
+        key, salt = generate_key_from_password(password)
+        if message.strip() != "":
+            enc_msg = encrypt_message(message, key)
+            payload_type = "TEXT"
+            payload = enc_msg
+        elif hidden_file and hidden_file.filename != "":
+            file_bytes = hidden_file.read()
+            file_b64 = base64.b64encode(file_bytes).decode()
+            enc_msg = encrypt_message(file_b64, key)
+            payload_type = "FILE"
+            payload = hidden_file.filename + "::" + enc_msg
+
+        else:
+            return "No message or file provided!"
+        full_payload = payload_type + ":" + salt.hex() + ":" + payload
+
+        message_bits = text_to_bits(full_payload)
+        out_path = os.path.join(UPLOAD_FOLDER, "encoded_" + filename)
+        encode_image(img, message_bits, out_path)
+
+        return send_file(out_path, as_attachment=True)
+
     return render_template("encode.html")
 
 @app.route("/decode", methods=["GET", "POST"])
@@ -40,20 +61,53 @@ def decode():
     if request.method == "POST":
         file = request.files["image"]
         password = request.form["password"]
+
         if file and password:
             filename = secure_filename(file.filename)
             filepath = os.path.join(UPLOAD_FOLDER, filename)
             file.save(filepath)
+
             try:
-                enc_msg_full = decode_image(filepath)
-                salt_hex, enc_msg = enc_msg_full.split(":", 1)
+                raw = decode_image(filepath)
+
+                parts = raw.split("|||")
+                if len(parts) < 3:
+                    return render_template("result.html", message="Corrupted data!", file_url=None)
+
+                data_type = parts[0]
+                salt_hex = parts[1]
+                payload = parts[2]
+
                 salt = bytes.fromhex(salt_hex)
                 key, _ = generate_key_from_password(password, salt=salt)
-                message = decrypt_message(enc_msg, key)
-                return render_template("result.html", message=message)
-            except:
-                return render_template("result.html", message="Incorrect password or corrupted image!")
+
+                if data_type == "TEXT":
+                    message = decrypt_message(payload, key)
+                    return render_template("result.html", message=message, file_url=None)
+
+                elif data_type == "FILE":
+                    original_name, enc_file = payload.split("::=", 1)
+                    decrypted_b64 = decrypt_message(enc_file, key)
+                    file_bytes = base64.b64decode(decrypted_b64)
+
+                    decoded_dir = os.path.join("static", "decoded")
+                    os.makedirs(decoded_dir, exist_ok=True)
+
+                    out_path = os.path.join(decoded_dir, original_name)
+                    with open(out_path, "wb") as f:
+                        f.write(file_bytes)
+
+                    file_url = "/static/decoded/" + original_name
+                    return render_template("result.html", message=None, file_url=file_url)
+
+                else:
+                    return render_template("result.html", message="Unknown format!", file_url=None)
+
+            except Exception as e:
+                return render_template("result.html", message="Incorrect password or corrupted image!", file_url=None)
+
     return render_template("decode.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

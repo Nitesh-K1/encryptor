@@ -1,15 +1,36 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Decoded Result</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
+</head>
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card p-4 text-center">
-            <h3 class="mb-3">Decoded Message</h3>
-            <p class="lead">{{ message }}</p>
+<body class="bg-base-200 p-6">
 
-            <a href="/" class="btn btn-dark mt-3">Back Home</a>
-        </div>
-    </div>
+<a href="/" class="btn btn-sm mb-4">← Home</a>
+
+<div class="max-w-lg mx-auto bg-base-100 p-6 rounded-xl shadow text-center">
+
+  <h1 class="text-2xl font-bold mb-4">Decoded Result</h1>
+
+  {% if message %}
+    <p class="text-lg">{{ message }}</p>
+  {% endif %}
+
+  {% if file_url %}
+    <p class="text-lg">File decoded successfully!</p>
+    <a href="{{ file_url }}" class="btn btn-primary mt-4" download>
+      Download Decoded File
+    </a>
+  {% endif %}
+
+  {% if not message and not file_url %}
+    <p>No data found.</p>
+  {% endif %}
+
 </div>
 
-{% endblock %}
+</body>
+</html>
