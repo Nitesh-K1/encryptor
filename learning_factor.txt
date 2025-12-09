@@ -1,0 +1,15 @@
+steganography:
+each pixel has 3 values R, G, B >> Red >> Green >> Blue
+(120, 200, 15)
+each number(0-255) is stored in 8 bits
+LSB >> steganography
+example: let say we have  origina R values : 120 = 01111000
+last bit - 0
+now if we want to hide the message then
+change the last bit to 1 >> 01111001 (which is 121)
+by repeating many times we can hide the whole message
+
+let say we have message  ""Hi" 
+H = 72 so in binary > 01001000
+i = 105 binary > 01101001
+now 'Hi' becomes 01001000 01101001

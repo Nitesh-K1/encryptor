@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+
+# VSCode settings
+.vscode/
+
+# Flask uploads folder (IMPORTANT!)
+uploads/
+
+# Flask instance folder
+instance/
+
+# Environment variables
+.env
+*.env
+
+# OS junk
+Thumbs.db
+.DS_Store
+
+# Log files
+*.log
+
+# Byte-compiled
+*.so
+
+# Backup files
+*.bak
+*.swp
+
+# PyInstaller build files
+build/
+dist/
+*.spec

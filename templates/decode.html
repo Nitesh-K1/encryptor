@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <body>
+    <h2>Decode Message</h2>
+    <form method="post" enctype="multipart/form-data">
+      Encoded Image: <input type="file" name="image" required /><br />
+      Password: <input type="password" name="password" required /><br />
+      <input type="submit" value="Decode" />
+    </form>
+  </body>
+</html>
