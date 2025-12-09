@@ -1,25 +1,54 @@
-{% extends "base.html" %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Encode Message</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
+</head>
 
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card p-4">
-            <h3 class="mb-3 text-center">Encode Message into Image</h3>
+<body class="bg-base-200 p-6">
 
-            <form method="POST" enctype="multipart/form-data">
-                <label class="mb-1">Select Image</label>
-                <input type="file" name="image" class="form-control mb-3" required>
+<a href="/" class="btn btn-sm mb-4">← Back</a>
 
-                <label class="mb-1">Secret Message</label>
-                <textarea name="message" rows="3" class="form-control mb-3" required></textarea>
+<div class="max-w-lg mx-auto bg-base-100 p-6 rounded-xl shadow">
+  <h1 class="text-2xl font-bold mb-4">Encode Message Into Image</h1>
 
-                <label class="mb-1">Password</label>
-                <input type="password" name="password" class="form-control mb-4" required>
+  <form method="POST" enctype="multipart/form-data">
 
-                <button class="btn btn-custom w-100">Encode & Download</button>
-            </form>
-        </div>
+    <!-- Drag & Drop -->
+    <label class="block mb-3">Select Image</label>
+    <div id="drop" 
+      class="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer">
+      <p class="text-gray-500">Drag & drop or click to upload</p>
+      <input type="file" name="image" id="fileInput" class="hidden" accept="image/*">
     </div>
+
+    <!-- Preview -->
+    <img id="preview" class="mt-4 hidden rounded shadow">
+
+    <label class="block mt-4">Message</label>
+    <textarea name="message" class="textarea textarea-bordered w-full" required></textarea>
+
+    <label class="block mt-4">Password</label>
+    <input type="password" class="input input-bordered w-full" name="password" required />
+
+    <button class="btn btn-primary w-full mt-6">Encode</button>
+  </form>
 </div>
 
-{% endblock %}
+<script>
+document.getElementById("drop").addEventListener("click", () => {
+  document.getElementById("fileInput").click()
+})
+
+document.getElementById("fileInput").addEventListener("change", function() {
+  const file = this.files[0]
+  const img = document.getElementById("preview")
+  img.src = URL.createObjectURL(file)
+  img.classList.remove("hidden")
+})
+</script>
+
+</body>
+</html>
