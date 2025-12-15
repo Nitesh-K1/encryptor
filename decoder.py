@@ -12,6 +12,4 @@ def decode_image(image_path):
             bits += str(r & 1)
             bits += str(g & 1)
             bits += str(b & 1)
-    from utils import bits_to_text
     return bits_to_text(bits)
-

@@ -1,33 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Image Encryptor</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
-</head>
+{% extends "base.html" %}
 
-<body class="bg-base-200">
-<div class="navbar bg-base-100 shadow">
-  <div class="flex-1 px-4 text-xl font-bold">Image Encryptor</div>
-  <div class="flex-none">
-    <label class="swap swap-rotate mr-4">
-      <input type="checkbox" onclick="document.documentElement.classList.toggle('dark')" />
-      <svg class="swap-on fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64 17l-.71.71c-3.12-3.12-3.12-8.19 0-11.31l.71.71c-2.73 2.73-2.73 7.17 0 9.89zm6.36 3a9 9 0 110-18 9 9 0 010 18zm0-16a7 7 0 100 14 7 7 0 000-14z"/></svg>
-      <svg class="swap-off fill-current w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6.76 4.84l-1.8-1.79L4 3.99l1.79 1.79 1.82-1.82-.85-.12zM1 11H0v2h1v-2zm11-9h-2v1h2V2zm8.24 2.05l-.11.85 1.82 1.82 1.79-1.79-1.82-1.82-.85-.11zm3.76 8.95h1v-2h-1v2zM17.24 19.16l1.8 1.79 1.06-1.06-1.79-1.79-1.82 1.82.85.12zM12 18a6 6 0 110-12 6 6 0 010 12z"/></svg>
-    </label>
-  </div>
-</div>
-
+{% block content %}
 <div class="hero min-h-screen">
   <div class="hero-content text-center">
     <div class="max-w-md">
-      <h1 class="text-4xl font-bold">Secure Image Steganography</h1>
-      <p class="py-4">Hide and encrypt messages inside images with military-grade security.</p>
+      <h1 class="text-4xl font-bold">Image Steganography</h1>
+      <p class="py-4">Hide and encrypt messages inside images.</p>
       <a href="/encode" class="btn btn-primary w-full my-2">Encode Message</a>
       <a href="/decode" class="btn btn-secondary w-full">Decode Message</a>
     </div>
   </div>
 </div>
-</body>
-</html>
+{% endblock %}

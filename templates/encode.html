@@ -1,79 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Encode Message</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css"
-      rel="stylesheet"
-    />
-  </head>
+{% extends "base.html" %}
 
-  <body class="bg-base-200 p-6">
-    <a href="/" class="btn btn-sm mb-4">← Back</a>
+{% block content %}
+<div class="p-6">
+  <a href="/" class="btn btn-sm mb-4">← Back</a>
 
-    <div class="max-w-lg mx-auto bg-base-100 p-6 rounded-xl shadow">
-      <h1 class="text-2xl font-bold mb-4">Encode Message Into Image</h1>
-      <form method="POST" enctype="multipart/form-data">
-        <label class="block mb-3">Select Image</label>
-        <div
-          id="drop"
-          class="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer"
-        >
-          <p class="text-gray-500">Drag & drop or click to upload</p>
-          <input
-            type="file"
-            name="image"
-            id="fileInput"
-            class="hidden"
-            accept="image/*"
-          />
-        </div>
-        <img id="preview" class="mt-4 hidden rounded shadow" />
-
-        <label class="block mt-4">Message</label>
-        <textarea
-          name="message"
-          class="textarea textarea-bordered w-full"
-          required
-        ></textarea>
-        <label class="block mt-4 font-semibold">Or Upload a File to Hide</label>
+  <div class="max-w-lg mx-auto bg-base-100 p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold mb-4">Encode Message Into Image</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <label class="block mb-3">Select Image</label>
+      <div
+        id="drop"
+        class="border-2 border-dashed rounded-xl p-6 text-center cursor-pointer"
+      >
+        <p class="text-gray-500">Drag & drop or click to upload</p>
         <input
           type="file"
-          name="hidden_file"
-          class="file-input file-input-bordered w-full"
+          name="image"
+          id="fileInput"
+          class="hidden"
+          accept="image/*"
         />
-        <p class="text-sm text-gray-500 mt-1">
-          Supported: any file (PDF, ZIP, PNG, DOCX, etc.)
-        </p>
+      </div>
+      <img id="preview" class="mt-4 hidden rounded shadow" />
 
-        <label class="block mt-4">Password</label>
-        <input
-          type="password"
-          class="input input-bordered w-full"
-          name="password"
-          required
-        />
+      <label class="block mt-4">Message</label>
+      <textarea
+        name="message"
+        class="textarea textarea-bordered w-full"
+        placeholder="Enter message (optional if hiding a file)"
+      ></textarea>
+      <label class="block mt-4 font-semibold">Or Upload a File to Hide</label>
+      <input
+        type="file"
+        name="hidden_file"
+        class="file-input file-input-bordered w-full"
+      />
+      <p class="text-sm text-gray-500 mt-1">
+        Supported: any file (PDF, ZIP, PNG, DOCX, etc.)
+      </p>
 
-        <button class="btn btn-primary w-full mt-6">Encode</button>
-        
-      </form>
-    </div>
+      <label class="block mt-4">Password</label>
+      <input
+        type="password"
+        class="input input-bordered w-full"
+        name="password"
+        required
+      />
 
-    <script>
-      document.getElementById("drop").addEventListener("click", () => {
-        document.getElementById("fileInput").click();
-      });
+      <button class="btn btn-primary w-full mt-6">Encode</button>
+    </form>
+  </div>
+</div>
 
-      document
-        .getElementById("fileInput")
-        .addEventListener("change", function () {
-          const file = this.files[0];
-          const img = document.getElementById("preview");
-          img.src = URL.createObjectURL(file);
-          img.classList.remove("hidden");
-        });
-    </script>
-  </body>
-</html>
+<script>
+  document.getElementById("drop").addEventListener("click", () => {
+    document.getElementById("fileInput").click();
+  });
+
+  document
+    .getElementById("fileInput")
+    .addEventListener("change", function () {
+      const file = this.files[0];
+      const img = document.getElementById("preview");
+      img.src = URL.createObjectURL(file);
+      img.classList.remove("hidden");
+    });
+</script>
+{% endblock %}

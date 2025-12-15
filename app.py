@@ -33,19 +33,32 @@ def encode():
         img = load_image(filepath)
 
         key, salt = generate_key_from_password(password)
-        if message.strip() != "":
-            enc_msg = encrypt_message(message, key)
+        has_message = message.strip() != ""
+        has_file = hidden_file and hidden_file.filename != ""
+        
+        if not has_message and not has_file:
+            return render_template("encode.html")
+
+        if has_message and has_file:
+            payload_type = "BOTH"
+            enc_msg_text = encrypt_message(message, key)
+            file_bytes = hidden_file.read()
+            file_b64 = base64.b64encode(file_bytes).decode()
+            enc_file = encrypt_message(file_b64, key)
+            payload = enc_msg_text + "::" + hidden_file.filename + "::" + enc_file
+        elif has_message:
             payload_type = "TEXT"
+            enc_msg = encrypt_message(message, key)
             payload = enc_msg
-        elif hidden_file and hidden_file.filename != "":
+        elif has_file:
+            payload_type = "FILE"
             file_bytes = hidden_file.read()
             file_b64 = base64.b64encode(file_bytes).decode()
             enc_msg = encrypt_message(file_b64, key)
-            payload_type = "FILE"
             payload = hidden_file.filename + "::" + enc_msg
-
         else:
             return "No message or file provided!"
+
         full_payload = payload_type + ":" + salt.hex() + ":" + payload
 
         message_bits = text_to_bits(full_payload)
@@ -99,6 +112,22 @@ def decode():
 
                     file_url = "/static/decoded/" + original_name
                     return render_template("result.html", message=None, file_url=file_url)
+
+                elif data_type == "BOTH":
+                    enc_msg_text, original_name, enc_file = payload.split("::", 2)
+                    message = decrypt_message(enc_msg_text, key)
+                    decrypted_b64 = decrypt_message(enc_file, key)
+                    file_bytes = base64.b64decode(decrypted_b64)
+
+                    decoded_dir = os.path.join("static", "decoded")
+                    os.makedirs(decoded_dir, exist_ok=True)
+
+                    out_path = os.path.join(decoded_dir, original_name)
+                    with open(out_path, "wb") as f:
+                        f.write(file_bytes)
+
+                    file_url = "/static/decoded/" + original_name
+                    return render_template("result.html", message=message, file_url=file_url)
 
                 else:
                     return render_template("result.html", message="Unknown format!", file_url=None)

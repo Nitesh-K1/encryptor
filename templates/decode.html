@@ -1,29 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Decode Message</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.css" rel="stylesheet" />
-</head>
+{% extends "base.html" %}
 
-<body class="bg-base-200 p-6">
+{% block content %}
+<div class="p-6">
+  <a href="/" class="btn btn-sm mb-4">← Back</a>
 
-<a href="/" class="btn btn-sm mb-4">← Back</a>
+  <div class="max-w-lg mx-auto bg-base-100 p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold mb-4">Decode Message</h1>
 
-<div class="max-w-lg mx-auto bg-base-100 p-6 rounded-xl shadow">
-  <h1 class="text-2xl font-bold mb-4">Decode Message</h1>
+    <form method="POST" enctype="multipart/form-data">
+      <label>Select Encoded Image</label>
+      <input type="file" name="image" class="file-input file-input-bordered w-full" required />
 
-  <form method="POST" enctype="multipart/form-data">
-    <label>Select Encoded Image</label>
-    <input type="file" name="image" class="file-input file-input-bordered w-full" required />
+      <label class="block mt-4">Password</label>
+      <input type="password" name="password" class="input input-bordered w-full" required />
 
-    <label class="block mt-4">Password</label>
-    <input type="password" name="password" class="input input-bordered w-full" required />
-
-    <button class="btn btn-primary w-full mt-6">Decode</button>
-  </form>
+      <button class="btn btn-primary w-full mt-6">Decode</button>
+    </form>
+  </div>
 </div>
-
-</body>
-</html>
+{% endblock %}
