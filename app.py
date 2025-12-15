@@ -69,8 +69,8 @@ def decode():
 
             try:
                 raw = decode_image(filepath)
-
-                parts = raw.split("|||")
+    
+                parts = raw.split(":", 2)
                 if len(parts) < 3:
                     return render_template("result.html", message="Corrupted data!", file_url=None)
 
@@ -86,7 +86,7 @@ def decode():
                     return render_template("result.html", message=message, file_url=None)
 
                 elif data_type == "FILE":
-                    original_name, enc_file = payload.split("::=", 1)
+                    original_name, enc_file = payload.split("::", 1)
                     decrypted_b64 = decrypt_message(enc_file, key)
                     file_bytes = base64.b64decode(decrypted_b64)
 
