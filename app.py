@@ -11,13 +11,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# ---------------- HOME ----------------
 @app.route("/")
 def index():
     return render_template("index.html")
 
-
-# ---------------- ENCODE ----------------
 @app.route("/encode", methods=["GET", "POST"])
 def encode():
     if request.method == "POST":
@@ -43,7 +40,6 @@ def encode():
         if not has_message and not has_file:
             return render_template("encode.html")
 
-        # -------- PAYLOAD CREATION --------
         if has_message and has_file:
             payload_type = "BOTH"
 
@@ -84,8 +80,6 @@ def encode():
 
     return render_template("encode.html")
 
-
-# ---------------- DECODE ----------------
 @app.route("/decode", methods=["GET", "POST"])
 def decode():
     if request.method == "POST":
@@ -102,20 +96,20 @@ def decode():
 
                 parts = raw.split(":", 2)
                 if len(parts) < 3:
-                    return render_template("result.html", message="Corrupted data!", file_url=None)
-
+                    return render_template(
+                        "result.html", message="Corrupted data!", file_url=None
+                    )
                 data_type, salt_hex, payload = parts
                 salt = bytes.fromhex(salt_hex)
 
                 key, _ = generate_key_from_password(password, salt=salt)
 
-                # -------- TEXT --------
                 if data_type == "TEXT":
                     encrypted_bytes = base64.b64decode(payload)
                     message = decrypt_message(encrypted_bytes, key)
-                    return render_template("result.html", message=message, file_url=None)
-
-                # -------- FILE --------
+                    return render_template(
+                        "result.html", message=message, file_url=None
+                    )
                 elif data_type == "FILE":
                     original_name, enc_file = payload.split("::", 1)
 
@@ -132,8 +126,9 @@ def decode():
                         f.write(file_bytes)
 
                     file_url = "/static/decoded/" + original_name
-                    return render_template("result.html", message=None, file_url=file_url)
-
+                    return render_template(
+                        "result.html", message=None, file_url=file_url
+                    )
                 elif data_type == "BOTH":
                     enc_msg_text, original_name, enc_file = payload.split("::", 2)
 
@@ -153,18 +148,19 @@ def decode():
                         f.write(file_bytes)
 
                     file_url = "/static/decoded/" + original_name
-                    return render_template("result.html", message=message, file_url=file_url)
-
+                    return render_template(
+                        "result.html", message=message, file_url=file_url
+                    )
                 else:
-                    return render_template("result.html", message="Unknown format!", file_url=None)
-
+                    return render_template(
+                        "result.html", message="Unknown format!", file_url=None
+                    )
             except Exception:
                 return render_template(
                     "result.html",
                     message="Incorrect password or corrupted image!",
-                    file_url=None
+                    file_url=None,
                 )
-
     return render_template("decode.html")
 if __name__ == "__main__":
     app.run(debug=True)
